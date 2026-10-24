@@ -41,80 +41,70 @@ void parse(std::vector<Token> &tokens) {
       currentSimpleCommand->insertArgument(
           strdup(t.value.c_str())); // fix the pointer issue
       i++;
-    } else if (t.type== TOKEN_REDIRECT){
-      if (!hasFile()){
+    } else if (t.type == TOKEN_REDIRECT) {
+      if (!hasFile()) {
         fprintf(stderr, "please enter a file name\n");
         return;
       }
-      currentCommand._outFile=strdup(tokens[i + 1].value.c_str());
-      i+=2; //filename included
+      currentCommand._outFile = strdup(tokens[i + 1].value.c_str());
+      i += 2; // filename included
 
-    }
-    else if (t.type ==TOKEN_PIPE){
-      if( currentSimpleCommand->_numberOfArguments==0){
+    } else if (t.type == TOKEN_PIPE) {
+      if (currentSimpleCommand->_numberOfArguments == 0) {
         fprintf(stderr, "enter a command before the pipe\n");
         return;
       }
       currentCommand.insertSimpleCommand(currentSimpleCommand);
       currentSimpleCommand = new SimpleCommand();
       i++;
-    }else if(t.type== TOKEN_APPEND)
-    {
-      if (!hasFile()){
+    } else if (t.type == TOKEN_APPEND) {
+      if (!hasFile()) {
         fprintf(stderr, "please enter a file name\n");
         return;
       }
-      currentCommand._outFile=strdup(tokens[i + 1].value.c_str());
-      currentCommand._append=1;
-      i+=2; //filename included
-    }else if(t.type== TOKEN_INPUT)
-    {
-      if (!hasFile()){
+      currentCommand._outFile = strdup(tokens[i + 1].value.c_str());
+      currentCommand._append = 1;
+      i += 2; // filename included
+    } else if (t.type == TOKEN_INPUT) {
+      if (!hasFile()) {
         fprintf(stderr, "please enter a file name\n");
         return;
       }
-      currentCommand._inputFile=strdup(tokens[i + 1].value.c_str());
-      i+=2; //filename included
+      currentCommand._inputFile = strdup(tokens[i + 1].value.c_str());
+      i += 2; // filename included
 
-  }
-  else if(t.type== TOKEN_ERROR)
-    {
-      if (!hasFile()){
+    } else if (t.type == TOKEN_ERROR) {
+      if (!hasFile()) {
         fprintf(stderr, "please enter a file name\n");
         return;
       }
-      currentCommand._errFile=strdup(tokens[i + 1].value.c_str());
-      i+=2; //filename included
+      currentCommand._errFile = strdup(tokens[i + 1].value.c_str());
+      i += 2; // filename included
 
-  }
-  else if(t.type== TOKEN_REDIRECT_AND_ERROR)
-    {
-      if (!hasFile()){
+    } else if (t.type == TOKEN_REDIRECT_AND_ERROR) {
+      if (!hasFile()) {
         fprintf(stderr, "please enter a file name\n");
         return;
       }
-      currentCommand._outFile=strdup(tokens[i + 1].value.c_str());
-      currentCommand._errFile=strdup(tokens[i + 1].value.c_str());
-      currentCommand._out_error=1;
-      i+=2; //filename included
+      currentCommand._outFile = strdup(tokens[i + 1].value.c_str());
+      currentCommand._errFile = strdup(tokens[i + 1].value.c_str());
+      currentCommand._out_error = 1;
+      i += 2; // filename included
 
-  }
-  else if(t.type== TOKEN_BACKGROUND)
-    {
-      currentCommand._background=1;
+    } else if (t.type == TOKEN_BACKGROUND) {
+      currentCommand._background = 1;
       i++;
-    }
-    else{
+    } else {
       fprintf(stderr, "invalid token");
       return;
     }
   }
-  if( currentSimpleCommand->_numberOfArguments>0){
+  if (currentSimpleCommand->_numberOfArguments > 0) {
     currentCommand.insertSimpleCommand(currentSimpleCommand);
-  }else{
+  } else {
     free(currentSimpleCommand->_arguments);
     free(currentSimpleCommand);
-    if (currentCommand._numberOfSimpleCommands==0){
+    if (currentCommand._numberOfSimpleCommands == 0) {
       currentCommand.prompt();
       return;
     }
@@ -234,7 +224,27 @@ void Command::execute() {
       Write your code here
   */
 
-  if( _numberOfSimpleCommands == 0) {
+  if (_numberOfSimpleCommands == 0) {
+    prompt();
+    return;
+  }
+  const char *prog = _simpleCommands[0]->_arguments[0];
+
+  if (strcmp(prog, "exit") == 0) {
+    printf("Good bye!\n");
+    exit(0);
+  }
+
+  if (strcmp(prog, "cd") == 0) {
+    const char *directory;
+    if (_simpleCommands[0]->_arguments[1] != NULL) {
+      directory = _simpleCommands[0]->_arguments[1];
+    } else {
+      directory = getenv("HOME");
+    }
+    if (chdir(directory) < 0)
+      perror("cd");
+    clear();
     prompt();
     return;
   }
