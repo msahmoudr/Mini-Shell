@@ -9,14 +9,14 @@ enum TokenType
 {
     TOKEN_COMMAND,    
     TOKEN_ARGUMENT,   
-    TOKEN_REDIRECT,  
-    TOKEN_APPEND,   
-    TOKEN_INPUT,     
-    TOKEN_ERROR,    
-    TOKEN_PIPE,       
-    TOKEN_BACKGROUND, 
-    TOKEN_REDIRECT_AND_ERROR,
-    TOKEN_EOF,       
+    TOKEN_REDIRECT,  //>
+    TOKEN_APPEND,   //>>
+    TOKEN_INPUT,   //<  
+    TOKEN_ERROR,  //2>  
+    TOKEN_PIPE,   //|    
+    TOKEN_BACKGROUND, //&
+    TOKEN_REDIRECT_AND_ERROR, //>&
+    TOKEN_EOF,      
 };
 
 struct Token

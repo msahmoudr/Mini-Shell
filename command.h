@@ -20,7 +20,7 @@ struct Command
 	char *_outFile;
 	char *_inputFile;
 	char *_errFile;
-	int  _out_error;
+	int  _out_error =0;
 	int _background;
 	int _append;
 
