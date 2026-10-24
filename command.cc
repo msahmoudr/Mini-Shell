@@ -334,22 +334,23 @@ void Command::execute() {
     clear();
     prompt();
   }
+}
 
-  void Command::prompt() {
-    printf("myshell>");
-    fflush(stdout);
-    std::string input;
-    while (true) {
-      std::getline(std::cin, input);
-      std::vector<Token> tokens = tokenize(input);
-      parse(tokens);
-    }
+void Command::prompt() {
+  printf("myshell>");
+  fflush(stdout);
+  std::string input;
+  while (true) {
+    std::getline(std::cin, input);
+    std::vector<Token> tokens = tokenize(input);
+    parse(tokens);
   }
+}
 
-  Command Command::_currentCommand;
-  SimpleCommand *Command::_currentSimpleCommand;
+Command Command::_currentCommand;
+SimpleCommand *Command::_currentSimpleCommand;
 
-  int main() {
-    Command::_currentCommand.prompt();
-    return 0;
-  }
+int main() {
+  Command::_currentCommand.prompt();
+  return 0;
+}
