@@ -234,6 +234,11 @@ void Command::execute() {
       Write your code here
   */
 
+  if( _numberOfSimpleCommands == 0) {
+    prompt();
+    return;
+  }
+
   clear();
   prompt();
 }
