@@ -21,8 +21,8 @@ struct Command
 	char *_inputFile;
 	char *_errFile;
 	int  _out_error =0;
-	int _background;
-	int _append;
+	int _background =0;
+	int _append =0;
 
 	void prompt();
 	void print();
