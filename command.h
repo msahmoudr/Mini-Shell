@@ -14,9 +14,9 @@ struct SimpleCommand
 
 struct Command
 {
-	int _numberOfAvailableSimpleCommands;
-	int _numberOfSimpleCommands;
-	SimpleCommand **_simpleCommands;
+	int _numberOfAvailableSimpleCommands = 1;
+	int _numberOfSimpleCommands =0;
+	SimpleCommand **_simpleCommands = (SimpleCommand **)malloc(_numberOfSimpleCommands * sizeof(SimpleCommand *));
 	char *_outFile;
 	char *_inputFile;
 	char *_errFile;
