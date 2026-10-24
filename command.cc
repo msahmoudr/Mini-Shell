@@ -141,14 +141,15 @@ void SimpleCommand::insertArgument(char *argument) {
 
 Command::Command() {
   _numberOfAvailableSimpleCommands = 1;
-  _simpleCommands = (SimpleCommand **)malloc(_numberOfSimpleCommands *
+  _numberOfSimpleCommands = 0;
+  _simpleCommands = (SimpleCommand **)malloc(_numberOfAvailableSimpleCommands *
                                              sizeof(SimpleCommand *));
 
-  _numberOfSimpleCommands = 0;
   _outFile = 0;
   _inputFile = 0;
   _errFile = 0;
   _background = 0;
+  _append = 0;
 }
 
 void Command::insertSimpleCommand(SimpleCommand *simpleCommand) {
@@ -216,6 +217,15 @@ void Command::print() {
          _inputFile ? _inputFile : "default", _errFile ? _errFile : "default",
          _out_error == 1 ? _errFile : "default", _background ? "YES" : "NO");
   printf("\n\n");
+}
+void sigchld_handler(int) {
+
+  int fd = open("shell_log.txt", O_WRONLY | O_CREAT | O_APPEND, 0644);
+  if (fd >= 0) {
+    const char *msg = "child terminated\n";
+    write(fd, msg, strlen(msg)); // write not printf to be async AI FIX
+    close(fd);
+  }
 }
 
 void Command::execute() {
@@ -324,16 +334,16 @@ void Command::execute() {
         close(pipefd[1]);
         inFd = pipefd[0];
       }
-      if (!_background) { // lw el child lessa ma5las4
-        for (pid_t p : pids) {
-          waitpid(p, nullptr, 0);
-        }
-      }
     }
-
-    clear();
-    prompt();
   }
+  if (!_background) { // lw el child lessa ma5las4
+    for (pid_t p : pids) {
+      waitpid(p, nullptr, 0);
+    }
+  }
+
+  clear();
+  prompt();
 }
 
 void Command::prompt() {
@@ -351,6 +361,8 @@ Command Command::_currentCommand;
 SimpleCommand *Command::_currentSimpleCommand;
 
 int main() {
+  signal(SIGINT, SIG_IGN);
+  signal(SIGCHLD, sigchld_handler);
   Command::_currentCommand.prompt();
   return 0;
 }
