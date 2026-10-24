@@ -43,7 +43,7 @@ void parse(std::vector<Token> &tokens) {
       i++;
     } else if (t.type== TOKEN_REDIRECT){
       if (!hasFile()){
-        fprintf(stderr, "please enter a file name");
+        fprintf(stderr, "please enter a file name\n");
         return;
       }
       currentCommand._outFile=strdup(tokens[i + 1].value.c_str());
@@ -52,7 +52,7 @@ void parse(std::vector<Token> &tokens) {
     }
     else if (t.type ==TOKEN_PIPE){
       if( currentSimpleCommand->_numberOfArguments==0){
-        fprintf(stderr, "enter a command before the pipe");
+        fprintf(stderr, "enter a command before the pipe\n");
         return;
       }
       currentCommand.insertSimpleCommand(currentSimpleCommand);
@@ -61,7 +61,7 @@ void parse(std::vector<Token> &tokens) {
     }else if(t.type== TOKEN_APPEND)
     {
       if (!hasFile()){
-        fprintf(stderr, "please enter a file name");
+        fprintf(stderr, "please enter a file name\n");
         return;
       }
       currentCommand._outFile=strdup(tokens[i + 1].value.c_str());
@@ -70,7 +70,7 @@ void parse(std::vector<Token> &tokens) {
     }else if(t.type== TOKEN_INPUT)
     {
       if (!hasFile()){
-        fprintf(stderr, "please enter a file name");
+        fprintf(stderr, "please enter a file name\n");
         return;
       }
       currentCommand._inputFile=strdup(tokens[i + 1].value.c_str());
@@ -80,7 +80,7 @@ void parse(std::vector<Token> &tokens) {
   else if(t.type== TOKEN_ERROR)
     {
       if (!hasFile()){
-        fprintf(stderr, "please enter a file name");
+        fprintf(stderr, "please enter a file name\n");
         return;
       }
       currentCommand._errFile=strdup(tokens[i + 1].value.c_str());
@@ -90,7 +90,7 @@ void parse(std::vector<Token> &tokens) {
   else if(t.type== TOKEN_REDIRECT_AND_ERROR)
     {
       if (!hasFile()){
-        fprintf(stderr, "please enter a file name");
+        fprintf(stderr, "please enter a file name\n");
         return;
       }
       currentCommand._outFile=strdup(tokens[i + 1].value.c_str());
